@@ -5,6 +5,11 @@ filtered _logger file
 import re
 from typing import List
 import logging
+from logging import StreamHandler
+import os
+import mysql.connector
+
+PII_FIELDS = ("name", "email", "password", "ssn", "phone")
 
 
 class RedactingFormatter(logging.Formatter):
@@ -34,3 +39,30 @@ def filter_datum(fields: List[str], redaction: str, message: str,
         message = re.sub(f'{field}=(.*?){separator}',
                          f'{field}={redaction}{separator}', message)
     return message
+
+
+def get_logger() -> logging.Logger:
+    """
+    function that takes no arguments and returns a logging.Logger object
+    """
+    logger = logging.getLogger('user_data')
+    logger.setLevel(logging.INFO)
+    logger.propagate = False
+
+    handler = StreamHandler()
+    formatter = RedactingFormatter(PII_FIELDS)
+    handler.setFormatter(formatter)
+
+    logger.addHandler(handler)
+    return logger
+
+
+def get_db() -> mysql.connector.connection.MYSQLConnection:
+    """ MySQL environment connection"""
+    db_connect = mysql.connector.connect(
+        user=os.getenv('PERSONAL_DATA_DB_USERNAME', 'root'),
+        password=os.getenv('PERSONAL_DATA_DB_PASSWORD', ''),
+        host=os.getenv('PERSONAL_DATA_DB_HOST', 'localhost'),
+        database=os.getenv('PERSONAL_DATA_DB_NAME')
+    )
+    return db_connect
