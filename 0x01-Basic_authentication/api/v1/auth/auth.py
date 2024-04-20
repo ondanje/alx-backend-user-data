@@ -41,10 +41,3 @@ class Auth:
         Returns None for now, will be updated later.
         """
         return None
-
-
-class BasicAuth(Auth):
-    """
-    a class BasicAuth that inherits from Auth
-    """
-    pass

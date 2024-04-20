@@ -2,7 +2,7 @@
 """
 Basic auth class to manage authentication
 """
-from auth import Auth
+from api.v1.auth.auth import Auth
 from flask import request
 from typing import List, TypeVar
 
