@@ -7,6 +7,9 @@ from typing import List, TypeVar
 
 
 class Auth:
+    """
+    Auth class to manage the API authentication
+    """
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """
         public method def require_auth(self, path: str,
@@ -22,7 +25,7 @@ class Auth:
         """
         return None
 
-    def current_user(self, request=None) -> TypeVar('User'): # type: ignore
+    def current_user(self, request=None) -> TypeVar('User'):  # type: ignore
         """
         Get the current user based on the request.
         Returns None for now, will be updated later.
