@@ -11,6 +11,9 @@ import os
 
 @app_views.route('/auth_session/login', methods=['POST'])
 def session_login():
+    """
+    implementing login session
+    """
     email = request.form.get('email')
     password = request.form.get('password')
 
