@@ -101,3 +101,18 @@ class BasicAuth(Auth):
             )
         email, password = self.extract_user_credentials(decoded_header)
         return self.user_object_from_credentials(email, password)
+
+    def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
+        """
+        Checks if authentication is required for a given path.
+        """
+        if not path or not isinstance(path, str):
+            return True
+
+        for excluded_path in excluded_paths:
+            if excluded_path.endswith("*") and path.startswith(excluded_path
+                                                               [:-1]):
+                return False
+            elif path == excluded_path:
+                return False
+        return True
