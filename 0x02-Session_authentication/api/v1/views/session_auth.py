@@ -12,7 +12,6 @@ import os
 def session_authenticate():
     """
     Handles routes for session authentication
-    
     """
     user_email = request.form.get('email')
     user_password = request.form.get('password')
