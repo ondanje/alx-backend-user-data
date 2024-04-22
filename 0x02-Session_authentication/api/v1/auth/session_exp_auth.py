@@ -13,14 +13,14 @@ class SessionExpAuth(base_auth.SessionAuth):
     """
     def __init__(self):
         """
-        initializing the objects
+        initializing the instance of the class
         """
         super().__init__()
         self.session_duration = int(os.getenv("SESSION_DURATION", 0))
 
     def create_session(self, user_id=None):
         """
-        method to create session
+        method to create session in the class
         """
         session_id = super().create_session(user_id)
         if session_id is None:
@@ -34,7 +34,7 @@ class SessionExpAuth(base_auth.SessionAuth):
 
     def user_id_for_session_id(self, session_id=None):
         """
-        method for user id session
+        method for user id session in the class
         """
         if session_id is None:
             return None
