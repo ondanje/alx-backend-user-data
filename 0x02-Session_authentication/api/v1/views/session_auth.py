@@ -32,3 +32,13 @@ def session_authenticate():
     response = jsonify(user[0].to_json())
     response.set_cookie(os.getenv("SESSION_NAME"), session_id)
     return response
+
+
+@app_views.route('/auth_session/logout', methods=['DELETE'])
+def logout():
+    """
+    implementing logout
+    """
+    if not auth.destroy_session(request):
+        abort(404)
+    return jsonify({}), 200
