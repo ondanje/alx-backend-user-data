@@ -49,15 +49,16 @@ class DB:
         """
         if not kwargs:
             raise InvalidRequestError()
-        try:
-            user = self._session.query(User).filter_by(**kwargs).first()
-
-            if user is None:
-                raise NoResultFound("No user found with the provided criteria")
-
-            return user
-        except InvalidRequestError as e:
-            raise e
+        for keyword, value in kwargs.items():
+            if hasattr(User, keyword):
+                first_user = self._session.query(User).filter_by(
+                    **{keyword: value}).first()
+                if first_user is not None:
+                    return first_user
+                else:
+                    raise NoResultFound()
+            else:
+                raise InvalidRequestError()
 
     def update_user(self, user_id: int, **kwargs) -> None:
         """
