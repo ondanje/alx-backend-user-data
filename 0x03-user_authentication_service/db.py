@@ -47,6 +47,8 @@ class DB:
         find_user_by method. This method takes in arbitrary keyword
         arguments and returns the first row found in the users table
         """
+        if not kwargs:
+            raise InvalidRequestError()
         try:
             user = self._session.query(User).filter_by(**kwargs).first()
 
