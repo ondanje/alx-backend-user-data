@@ -6,6 +6,7 @@ import bcrypt
 from db import DB
 from sqlalchemy.orm.exc import NoResultFound
 from user import User
+import uuid
 
 
 def _hash_password(password: str) -> bytes:
@@ -16,6 +17,15 @@ def _hash_password(password: str) -> bytes:
     salt = bcrypt.gensalt()
     hashed_paswd = bcrypt.hashpw(password.encode('utf-8'), salt)
     return hashed_paswd
+
+
+def _generate_uuid() -> str:
+    """
+    should return a string representation of a new UUID
+    """
+    myuuid = str(uuid.uuid4())
+
+    return myuuid
 
 
 class Auth:
@@ -58,3 +68,40 @@ class Auth:
 
         except NoResultFound:
             return False
+
+    def create_session(self, email: str) -> str:
+        """
+        method that takes an email string argument and
+        returns the session ID as a string.
+        """
+        try:
+            user = self._db.find_user_by(email=email)
+            session_id = _generate_uuid()
+            self._db.update_user(user_id=user.id, session_id=session_id)
+
+            return session_id
+        except Exception:
+            return None
+
+    def get_user_from_session_id(self, session_id: str) -> User:
+        """
+        method to obtain the user using the session id
+        """
+        if session_id is None:
+            return None
+        user = self._db.find_user_by(session_id=session_id)
+        if not user:
+            return None
+
+        return user
+
+    def destroy_session(self, user_id: int) -> None:
+        """
+        method to destroy the session depending on the  user id
+        """
+        try:
+            user = self._db.find_user_by(user_id=user_id)
+            user.session_id = None
+            self._db.update_user(user_id, session_id=None)
+        except Exception:
+            return None
